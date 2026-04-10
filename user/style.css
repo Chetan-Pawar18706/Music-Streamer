@@ -1,0 +1,80 @@
+:root { --primary-color: #1db954; --surface-color: #282828; --background-color: #121212; --text-color: #fff; --text-subdued: #b3b3b3; --error-color: #e74c3c; --success-color: #2ecc71; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--background-color); color: var(--text-color); margin: 0; line-height: 1.6; }
+.dashboard-container { max-width: 900px; margin: 2rem auto; padding: 1rem 2rem; }
+.dashboard-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--surface-color); padding-bottom: 1rem; margin-bottom: 2rem; }
+.dashboard-header h1 { margin: 0; color: var(--primary-color); }
+.dashboard-main { display: flex; flex-direction: column; gap: 2rem; }
+.welcome-card { background-color: var(--surface-color); padding: 1.5rem 2rem; border-radius: 8px; }
+.welcome-card h2 { margin-top: 0; }
+.stats-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+.stat-card { background-color: var(--surface-color); padding: 2rem; border-radius: 8px; text-align: center; }
+.stat-card h3 { font-size: 3rem; margin: 0; color: var(--primary-color); }
+.stat-card p { color: var(--text-subdued); margin-bottom: 1.5rem; }
+.playlist-create-form { display: flex; gap: 1rem; margin-bottom: 2rem; }
+.playlist-create-form input { flex-grow: 1; padding: 0.7rem; background: var(--surface-color); border: 1px solid #555; color: white; border-radius: 4px; }
+.playlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
+.playlist-card { background: var(--surface-color); padding: 1.5rem; border-radius: 8px; text-align: center; }
+.playlist-card h3 { margin-top: 0; }
+.btn { padding: 0.6rem 1.2rem; border: none; border-radius: 20px; cursor: pointer; text-decoration: none; font-weight: bold; transition: background-color 0.2s; background-color: var(--primary-color); color: white; display: inline-block; }
+.btn:hover { background-color: #1ed760; }
+.btn-logout { background-color: var(--error-color); }
+.btn-logout:hover { background-color: #c0392b; }
+.auth-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+.auth-form { background: var(--surface-color); padding: 2rem 3rem; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); width: 100%; max-width: 400px; }
+.auth-form h2 { text-align: center; margin-bottom: 1.5rem; color: var(--primary-color); }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; margin-bottom: 0.5rem; }
+.form-group input { width: 100%; padding: 0.7rem; background: #3e3e3e; border: 1px solid #555; color: white; border-radius: 4px; box-sizing: border-box; }
+.auth-form p { text-align: center; margin-top: 1rem; }
+.auth-form a { color: var(--primary-color); text-decoration: none; }
+.error, .message, .success { padding: 1rem; border-radius: 4px; margin-bottom: 1rem; text-align: center; }
+.error { background-color: rgba(231, 76, 60, 0.2); color: var(--error-color); border: 1px solid var(--error-color); }
+.success { background-color: rgba(46, 204, 113, 0.2); color: var(--success-color); border: 1px solid var(--success-color); }
+/* --- Playlist View Page Styles --- */
+.song-list-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+.song-item-view {
+    background-color: var(--surface-color);
+    padding: 1rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.2s, opacity 0.2s;
+}
+.song-item-view:hover {
+    transform: scale(1.02);
+}
+.song-cover-view {
+    width: 80px;
+    height: 80px;
+    border-radius: 4px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+}
+.song-info-view {
+    flex-grow: 1;
+}
+.song-title-view {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0 0 0.2rem 0;
+}
+.song-artist-view {
+    font-size: 0.9rem;
+    color: var(--text-subdued);
+    margin: 0;
+}
+.btn-remove {
+    background-color: var(--error-color);
+    color: white;
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+}
+.btn-remove:hover {
+    background-color: #c0392b;
+}
