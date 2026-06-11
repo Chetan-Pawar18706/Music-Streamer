@@ -53,11 +53,17 @@ $songs = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php else: ?>
                 <div class="song-list-view">
                     <?php foreach ($songs as $song): ?>
-                        <div class="song-item-view" data-song-id="<?php echo $song['id']; ?>">
+                        <div class="song-item-view" data-song-id="<?php echo $song['id']; ?>" data-song-path="<?php echo htmlspecialchars($song['file_path']); ?>" data-external-link="<?php echo htmlspecialchars($song['external_link'] ?? ''); ?>" data-song-title="<?php echo htmlspecialchars($song['title']); ?>" data-song-artist="<?php echo htmlspecialchars($song['artist']); ?>" data-song-category="<?php echo htmlspecialchars($song['category'] ?? ''); ?>">
                             <img src="<?php echo htmlspecialchars($song['cover_image'] ?? 'https://via.placeholder.com/100'); ?>" alt="Cover" class="song-cover-view">
                             <div class="song-info-view">
                                 <h4 class="song-title-view"><?php echo htmlspecialchars($song['title']); ?></h4>
                                 <p class="song-artist-view"><?php echo htmlspecialchars($song['artist']); ?></p>
+                                <?php if (!empty($song['category'])): ?>
+                                    <span class="song-category-view"><?php echo htmlspecialchars($song['category']); ?></span>
+                                <?php endif; ?>
+                                <?php if (!empty($song['external_link'])): ?>
+                                    <a href="<?php echo htmlspecialchars($song['external_link']); ?>" target="_blank" class="btn btn-link">Listen Externally</a>
+                                <?php endif; ?>
                             </div>
                             <button class="btn btn-remove remove-from-playlist-btn" data-playlist-id="<?php echo $playlist_id; ?>" data-song-id="<?php echo $song['id']; ?>">Remove</button>
                         </div>
@@ -68,10 +74,9 @@ $songs = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <script>
-        
-        // Simple JavaScript for handling removal
         document.querySelectorAll('.remove-from-playlist-btn').forEach(button => {
-            button.addEventListener('click', async function() {
+            button.addEventListener('click', async function(event) {
+                event.stopPropagation();
                 if (!confirm('Are you sure you want to remove this song from the playlist?')) {
                     return;
                 }
@@ -89,44 +94,9 @@ $songs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     const result = await response.json();
 
                     if (result.success) {
-                        // Remove the song element from the page with a fade-out effect
-                        songItem.style.transition = 'opacity 0.5s';
+                        songItem.style.transition = 'opacity 0.4s ease';
                         songItem.style.opacity = '0';
-                        setTimeout(() => songItem.remove(), 500);
-                    } else {
-                        alert('Error: ' + result.message);
-                    }
-                } catch (error) {
-                    alert('An error occurred. Please try again.');
-                }
-            });
-        });
-    </script>
-        <script>
-        // Simple JavaScript for handling removal
-        document.querySelectorAll('.remove-from-playlist-btn').forEach(button => {
-            button.addEventListener('click', async function() {
-                if (!confirm('Are you sure you want to remove this song from the playlist?')) {
-                    return;
-                }
-
-                const playlistId = this.dataset.playlistId;
-                const songId = this.dataset.songId;
-                const songItem = this.closest('.song-item-view');
-
-                try {
-                    const response = await fetch('../api/remove_from_playlist.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: `playlist_id=${playlistId}&song_id=${songId}`
-                    });
-                    const result = await response.json();
-
-                    if (result.success) {
-                        // Remove the song element from the page with a fade-out effect
-                        songItem.style.transition = 'opacity 0.5s';
-                        songItem.style.opacity = '0';
-                        setTimeout(() => songItem.remove(), 500);
+                        setTimeout(() => songItem.remove(), 400);
                     } else {
                         alert('Error: ' + result.message);
                     }
@@ -136,22 +106,22 @@ $songs = $stmt->fetchAll(PDO::FETCH_ASSOC);
             });
         });
 
-        // --- NEW: Handle clicks on songs to play them ---
         document.querySelectorAll('.song-item-view').forEach(item => {
-            item.addEventListener('click', () => {
-                // Get song details from the data attributes
+            item.addEventListener('click', (e) => {
+                if (e.target.closest('.remove-from-playlist-btn') || e.target.closest('.btn-link')) {
+                    return;
+                }
+
                 const songData = {
                     id: item.dataset.songId,
                     path: item.dataset.songPath,
+                    externalLink: item.dataset.externalLink,
                     title: item.dataset.songTitle,
                     artist: item.dataset.songArtist,
                     cover: item.querySelector('.song-cover-view').src
                 };
 
-                // Save song data to localStorage
                 localStorage.setItem('currentSong', JSON.stringify(songData));
-
-                // Redirect to the player page
                 window.location.href = '../player.php';
             });
         });

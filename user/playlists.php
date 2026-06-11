@@ -13,9 +13,14 @@ if (isset($_GET['fetch_as_json'])) {
 }
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['create_playlist'])) {
-    $stmt = $pdo->prepare("INSERT INTO playlists (user_id, name) VALUES (?, ?)");
-    $stmt->execute([$_SESSION['user_id'], trim($_POST['playlist_name'])]);
-    $message = "Playlist created successfully!";
+    $playlist_name = trim($_POST['playlist_name'] ?? '');
+    if ($playlist_name === '') {
+        $message = "Playlist name cannot be empty.";
+    } else {
+        $stmt = $pdo->prepare("INSERT INTO playlists (user_id, name) VALUES (?, ?)");
+        $stmt->execute([$_SESSION['user_id'], $playlist_name]);
+        $message = "Playlist created successfully!";
+    }
 }
 $stmt = $pdo->prepare("SELECT * FROM playlists WHERE user_id = ? ORDER BY created_at DESC");
 $stmt->execute([$_SESSION['user_id']]);

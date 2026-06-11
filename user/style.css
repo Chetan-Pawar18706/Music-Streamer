@@ -1,80 +1,434 @@
-:root { --primary-color: #1db954; --surface-color: #282828; --background-color: #121212; --text-color: #fff; --text-subdued: #b3b3b3; --error-color: #e74c3c; --success-color: #2ecc71; }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--background-color); color: var(--text-color); margin: 0; line-height: 1.6; }
-.dashboard-container { max-width: 900px; margin: 2rem auto; padding: 1rem 2rem; }
-.dashboard-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--surface-color); padding-bottom: 1rem; margin-bottom: 2rem; }
-.dashboard-header h1 { margin: 0; color: var(--primary-color); }
-.dashboard-main { display: flex; flex-direction: column; gap: 2rem; }
-.welcome-card { background-color: var(--surface-color); padding: 1.5rem 2rem; border-radius: 8px; }
-.welcome-card h2 { margin-top: 0; }
-.stats-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
-.stat-card { background-color: var(--surface-color); padding: 2rem; border-radius: 8px; text-align: center; }
-.stat-card h3 { font-size: 3rem; margin: 0; color: var(--primary-color); }
-.stat-card p { color: var(--text-subdued); margin-bottom: 1.5rem; }
-.playlist-create-form { display: flex; gap: 1rem; margin-bottom: 2rem; }
-.playlist-create-form input { flex-grow: 1; padding: 0.7rem; background: var(--surface-color); border: 1px solid #555; color: white; border-radius: 4px; }
-.playlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
-.playlist-card { background: var(--surface-color); padding: 1.5rem; border-radius: 8px; text-align: center; }
-.playlist-card h3 { margin-top: 0; }
-.btn { padding: 0.6rem 1.2rem; border: none; border-radius: 20px; cursor: pointer; text-decoration: none; font-weight: bold; transition: background-color 0.2s; background-color: var(--primary-color); color: white; display: inline-block; }
-.btn:hover { background-color: #1ed760; }
-.btn-logout { background-color: var(--error-color); }
-.btn-logout:hover { background-color: #c0392b; }
-.auth-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-.auth-form { background: var(--surface-color); padding: 2rem 3rem; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); width: 100%; max-width: 400px; }
-.auth-form h2 { text-align: center; margin-bottom: 1.5rem; color: var(--primary-color); }
-.form-group { margin-bottom: 1rem; }
-.form-group label { display: block; margin-bottom: 0.5rem; }
-.form-group input { width: 100%; padding: 0.7rem; background: #3e3e3e; border: 1px solid #555; color: white; border-radius: 4px; box-sizing: border-box; }
-.auth-form p { text-align: center; margin-top: 1rem; }
-.auth-form a { color: var(--primary-color); text-decoration: none; }
-.error, .message, .success { padding: 1rem; border-radius: 4px; margin-bottom: 1rem; text-align: center; }
-.error { background-color: rgba(231, 76, 60, 0.2); color: var(--error-color); border: 1px solid var(--error-color); }
-.success { background-color: rgba(46, 204, 113, 0.2); color: var(--success-color); border: 1px solid var(--success-color); }
-/* --- Playlist View Page Styles --- */
+:root {
+    --primary-color: #1db954;
+    --primary-hover: #1ed760;
+    --surface-color: rgba(255, 255, 255, 0.06);
+    --surface-hover: rgba(255, 255, 255, 0.1);
+    --background-color: #0f0f0f;
+    --card-gradient: linear-gradient(145deg, rgba(40,40,40,0.9), rgba(25,25,25,0.95));
+    --text-color: #ffffff;
+    --text-subdued: #b3b3b3;
+    --error-color: #ff4d4f;
+    --success-color: #2ecc71;
+    --border-color: rgba(255,255,255,0.08);
+    --shadow: 0 8px 30px rgba(0,0,0,0.35);
+    --glass: blur(12px);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(to bottom right, #121212, #0b0b0b);
+    color: var(--text-color);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* DASHBOARD */
+.dashboard-container {
+    max-width: 1300px;
+    margin: auto;
+    padding: 2rem;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dashboard-header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* WELCOME CARD */
+.welcome-card {
+    background: var(--card-gradient);
+    backdrop-filter: var(--glass);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    transition: 0.3s ease;
+}
+
+.welcome-card:hover {
+    transform: translateY(-4px);
+}
+
+.welcome-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-card p {
+    color: var(--text-subdued);
+}
+
+/* STATS CARDS */
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.8rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--card-gradient);
+    border-radius: 24px;
+    padding: 2rem;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.05), transparent);
+    transform: translateX(-100%);
+    transition: 0.8s;
+}
+
+.stat-card:hover::before {
+    transform: translateX(100%);
+}
+
+.stat-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    background: var(--surface-hover);
+}
+
+.stat-card h3 {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.stat-card p {
+    color: var(--text-subdued);
+    font-size: 1rem;
+}
+
+/* PLAYLIST CREATE */
+.playlist-create-form {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.playlist-create-form input {
+    flex: 1;
+    padding: 1rem;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    background: rgba(255,255,255,0.05);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+.playlist-create-form input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 12px rgba(29,185,84,0.3);
+}
+
+/* PLAYLIST GRID */
+.playlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 2rem;
+}
+
+/* MODERN PLAYLIST CARD */
+.playlist-card {
+    position: relative;
+    background: var(--card-gradient);
+    border-radius: 24px;
+    padding: 1.5rem;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    transition: all 0.35s ease;
+    cursor: pointer;
+}
+
+.playlist-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    background: rgba(255,255,255,0.08);
+}
+
+.playlist-card::after {
+    content: "";
+    position: absolute;
+    top: -60%;
+    right: -60%;
+    width: 180px;
+    height: 180px;
+    background: rgba(29,185,84,0.12);
+    border-radius: 50%;
+    transition: 0.5s;
+}
+
+.playlist-card:hover::after {
+    transform: scale(1.3);
+}
+
+.playlist-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.7rem;
+    position: relative;
+    z-index: 2;
+}
+
+.playlist-card p {
+    color: var(--text-subdued);
+    font-size: 0.95rem;
+    margin-bottom: 1.2rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* BUTTONS */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--primary-color), #18a34a);
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, var(--primary-hover), #1db954);
+    box-shadow: 0 4px 15px rgba(29,185,84,0.35);
+}
+
+.btn-logout {
+    background: linear-gradient(135deg, #ff4d4f, #d63031);
+}
+
+.btn-logout:hover {
+    box-shadow: 0 4px 15px rgba(255,77,79,0.35);
+}
+
+/* AUTH */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+.auth-form {
+    width: 100%;
+    max-width: 430px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(18px);
+    border: 1px solid var(--border-color);
+    border-radius: 28px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow);
+}
+
+.auth-form h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--primary-color);
+    font-size: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.4rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-subdued);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    background: rgba(255,255,255,0.06);
+    color: white;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+.form-group input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 12px rgba(29,185,84,0.3);
+    outline: none;
+}
+
+/* SONG CARDS */
 .song-list-view {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
 }
+
 .song-item-view {
-    background-color: var(--surface-color);
+    background: var(--card-gradient);
+    border-radius: 22px;
     padding: 1rem;
-    border-radius: 8px;
     display: flex;
     align-items: center;
     gap: 1rem;
-    transition: transform 0.2s, opacity 0.2s;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
 }
+
 .song-item-view:hover {
-    transform: scale(1.02);
+    transform: translateY(-5px);
+    background: rgba(255,255,255,0.08);
 }
+
 .song-cover-view {
-    width: 80px;
-    height: 80px;
-    border-radius: 4px;
+    width: 90px;
+    height: 90px;
+    border-radius: 16px;
     object-fit: cover;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    flex-shrink: 0;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
 }
-.song-info-view {
-    flex-grow: 1;
-}
+
 .song-title-view {
     font-size: 1.1rem;
-    font-weight: bold;
-    margin: 0 0 0.2rem 0;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
 }
+
 .song-artist-view {
-    font-size: 0.9rem;
     color: var(--text-subdued);
-    margin: 0;
+    font-size: 0.9rem;
 }
+
 .btn-remove {
-    background-color: var(--error-color);
-    color: white;
+    background: linear-gradient(135deg, #ff4d4f, #d63031);
     font-size: 0.8rem;
-    padding: 0.5rem 1rem;
+    padding: 0.55rem 1rem;
 }
+
 .btn-remove:hover {
-    background-color: #c0392b;
+    transform: scale(1.05);
+}
+
+/* ALERTS */
+.error,
+.success,
+.message {
+    padding: 1rem;
+    border-radius: 14px;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+.error {
+    background: rgba(255,77,79,0.12);
+    border: 1px solid rgba(255,77,79,0.4);
+    color: #ff7675;
+}
+
+.success {
+    background: rgba(46,204,113,0.12);
+    border: 1px solid rgba(46,204,113,0.4);
+    color: #2ecc71;
+}
+
+.btn-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.05);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 0.9rem;
+}
+
+.btn-link:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+.auth-form p {
+    color: var(--text-subdued);
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.auth-form p a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.auth-form p a:hover {
+    text-decoration: underline;
+}
+
+.song-info-view {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.playlist-card {
+    overflow: hidden;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .playlist-create-form {
+        flex-direction: column;
+    }
+
+    .song-item-view {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .song-cover-view {
+        width: 100%;
+        height: 220px;
+    }
 }

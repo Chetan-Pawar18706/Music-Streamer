@@ -32,11 +32,17 @@ require_once 'includes/db.php';
         <main>
             <div class="song-list" id="song-list">
                 <?php if ($songs): foreach ($songs as $song): ?>
-                    <div class="song-item" data-song-id="<?php echo $song['id']; ?>" data-song-path="<?php echo htmlspecialchars($song['file_path']); ?>" data-song-title="<?php echo htmlspecialchars($song['title']); ?>" data-song-artist="<?php echo htmlspecialchars($song['artist']); ?>">
+                    <div class="song-item" data-song-id="<?php echo $song['id']; ?>" data-song-path="<?php echo htmlspecialchars($song['file_path']); ?>" data-external-link="<?php echo htmlspecialchars($song['external_link'] ?? ''); ?>" data-song-title="<?php echo htmlspecialchars($song['title']); ?>" data-song-artist="<?php echo htmlspecialchars($song['artist']); ?>" data-song-category="<?php echo htmlspecialchars($song['category'] ?? ''); ?>">
                         <img src="<?php echo htmlspecialchars($song['cover_image'] ?? 'https://via.placeholder.com/150'); ?>" alt="Cover" class="song-cover">
                         <div class="song-info">
                             <h3 class="song-title"><?php echo htmlspecialchars($song['title']); ?></h3>
                             <p class="song-artist"><?php echo htmlspecialchars($song['artist']); ?></p>
+                            <?php if (!empty($song['category'])): ?>
+                                <span class="song-category"><?php echo htmlspecialchars($song['category']); ?></span>
+                            <?php endif; ?>
+                            <?php if (!empty($song['external_link'])): ?>
+                                <a href="<?php echo htmlspecialchars($song['external_link']); ?>" target="_blank" class="external-link-btn">Open External</a>
+                            <?php endif; ?>
                         </div>
                         <?php if (isset($_SESSION['user_logged_in'])): ?>
                             <button class="add-to-playlist-btn" title="Add to Playlist">+</button>
@@ -49,9 +55,9 @@ require_once 'includes/db.php';
         </main>
         <footer>
             <div class="audio-player-container">
-                <div class="player-info"><img id="player-cover" src="https://via.placeholder.com/50" alt="Now Playing"><div><div id="player-title">Select a song</div><div id="player-artist">&nbsp;</div></div></div>
+                <div class="player-info"><img id="player-cover" src="https://via.placeholder.com/50" alt="Now Playing"><div><div id="player-title">Select a song</div><div id="player-artist">&nbsp;</div><div id="player-category" class="player-category">&nbsp;</div></div></div>
                 <div class="player-controls"><button id="prev-btn" class="control-btn">⏮</button><button id="play-pause-btn" class="control-btn">▶</button><button id="next-btn" class="control-btn">⏭</button></div>
-                <div class="player-extras"><button id="shuffle-btn" class="control-btn">🔀</button><button id="repeat-btn" class="control-btn">🔁</button></div>
+                <div class="player-extras"><button id="shuffle-btn" class="control-btn" title="Shuffle">🔀</button><button id="repeat-btn" class="control-btn" title="Repeat">🔁</button><button id="external-link-player-btn" class="control-btn" style="display:none;" title="Open External Link">🌐</button></div>
                 <div class="progress-container"><span id="current-time">0:00</span><input type="range" id="progress-bar" min="0" max="100" value="0"><span id="duration">0:00</span></div>
                 <audio id="audio-player"></audio>
             </div>

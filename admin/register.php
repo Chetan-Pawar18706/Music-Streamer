@@ -7,7 +7,8 @@ $allow_registration = false;
 
 // Check if there are any admins in the database
 try {
-    $stmt = $pdo->query("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'admins'");
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'admins'");
+    $stmt->execute();
     $table_exists = $stmt->fetchColumn() > 0;
     
     if ($table_exists) {
