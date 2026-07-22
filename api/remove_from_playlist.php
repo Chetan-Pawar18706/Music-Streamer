@@ -1,57 +1,48 @@
 <?php
-// This script handles AJAX requests to remove a song from a playlist.
-// It expects a POST request with 'playlist_id' and 'song_id'.
-
 require_once '../includes/db.php';
+header('Content-Type: application/json');
 
-// Check if user is logged in
 if (!isset($_SESSION['user_logged_in'])) {
-    http_response_code(403); // Forbidden
-    echo json_encode(['success' => false, 'message' => 'You must be logged in to do that.']);
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'You must be logged in.']);
     exit;
 }
 
-// Check if the request is a POST request
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405); // Method Not Allowed
+    http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
     exit;
 }
 
-// Get the data from the POST request
-$playlist_id = $_POST['playlist_id'] ?? null;
-$song_id = $_POST['song_id'] ?? null;
+$playlistId = $_POST['playlist_id'] ?? null;
+$userSongId = $_POST['song_id'] ?? null;
 
-// Validate the data
-if (empty($playlist_id) || empty($song_id) || !is_numeric($playlist_id) || !is_numeric($song_id)) {
-    http_response_code(400); // Bad Request
+if (empty($playlistId) || empty($userSongId) || !is_numeric($playlistId) || !is_numeric($userSongId)) {
+    http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Invalid data provided.']);
     exit;
 }
 
-// Verify that the playlist belongs to the current user
-$user_id = $_SESSION['user_id'];
+$userId = $_SESSION['user_id'];
+
 $stmt = $pdo->prepare("SELECT id FROM playlists WHERE id = ? AND user_id = ?");
-$stmt->execute([$playlist_id, $user_id]);
+$stmt->execute([$playlistId, $userId]);
 if (!$stmt->fetch()) {
-    http_response_code(403); // Forbidden
+    http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'You do not own this playlist.']);
     exit;
 }
 
-// Remove the song from the playlist
 try {
     $stmt = $pdo->prepare("DELETE FROM playlist_songs WHERE playlist_id = ? AND song_id = ?");
-    $stmt->execute([$playlist_id, $song_id]);
-    
-    // Check if a row was actually deleted
+    $stmt->execute([$playlistId, $userSongId]);
+
     if ($stmt->rowCount() > 0) {
-        echo json_encode(['success' => true, 'message' => 'Song removed from playlist successfully!']);
+        echo json_encode(['success' => true, 'message' => 'Song removed from playlist!']);
     } else {
         echo json_encode(['success' => false, 'message' => 'Song was not in this playlist.']);
     }
 } catch (PDOException $e) {
-    http_response_code(500); // Internal Server Error
-    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Database error.']);
 }
-?>

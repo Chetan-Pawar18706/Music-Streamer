@@ -23,37 +23,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error_message = 'Invalid username or password.';
         }
     } catch (PDOException $e) {
-        $error_message = 'Database error. Please try again later.';
+        $error_message = 'Database error.';
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
-    <!-- This link is correct. The CSS file is in the same folder. -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="login-container">
         <form action="login.php" method="post" class="login-form">
-            <h2>Admin Login</h2>
+            <h2>&#9835; Admin Panel</h2>
+            <p style="color: #aaa; text-align: center; margin-bottom: 20px;">Music Stream Administration</p>
             <?php if ($error_message): ?>
-                <p class="error"><?php echo $error_message; ?></p>
+                <div class="error"><?php echo $error_message; ?></div>
             <?php endif; ?>
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="username" name="username" placeholder="Admin username" required>
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" placeholder="Admin password" required>
             </div>
-            <button type="submit" class="btn">Login</button>
-            <p>Don't have an account? <a href="register.php">Register here</a></p>
+            <button type="submit" class="btn btn-submit">Login</button>
+            <p style="text-align: center; margin-top: 15px;"><a href="../index.php" style="color: #aaa;">Back to Home</a></p>
         </form>
     </div>
 </body>
